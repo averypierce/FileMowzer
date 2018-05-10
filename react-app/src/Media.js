@@ -10,6 +10,11 @@ class Stuff extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
+                    libraries: [{ 
+                      label: "TV",
+                      path: "MRAO",
+                    }],
                     files: [],
                      path: "",
  
@@ -19,12 +24,34 @@ class Stuff extends Component {
                       isDirectory: false
                     }],
 
-                    crumbs: [{
-                      label: "Media",
-                      path: "/#/Media"
-                    }]
+                    crumbs: [{ label: "Media", path: "/#/Media" }]
                 };  
+   this.listLibraries();
    console.log(this.props.location.pathname);
+  }
+  listLibraries() {
+    let apiBaseUrl = "http://192.168.0.138:5000/api/v1/home";
+    let token = localStorage.getItem('id_token');
+    let self = this;
+    let config = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      }
+    }
+    axios.get(apiBaseUrl,config)
+    .then(function (response) {
+        console.log(response);
+        if(response.status === 200){
+          self.setState({
+            libraries: response.data.map(library => ({ label: library, path: `/#/Media/${library}`}))
+          })
+        } else {
+            console.log("A vague error has occured");
+        }
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
   }
   //hmmmm
   bcClick(path,i) {
@@ -118,10 +145,24 @@ class Stuff extends Component {
 
   render() {
 
+    let userLibraries = this.state.libraries.map((library,i) => {
+        return (
+            <RaisedButton
+                primary={true}
+                path = {library.path}
+                label = {library.label}
+                key = {i}
+                onClick = {() => this.libraryClick(library.label)}
+            />
+        );
+    });
+
     return (
       <div>
         <MuiThemeProvider>
-          <RaisedButton type="submit" primary={true} label="TV"  onClick={() => this.libraryClick("tv")}/>
+          <div>
+            {userLibraries}
+          </div>
         </MuiThemeProvider>
 
         <br></br>

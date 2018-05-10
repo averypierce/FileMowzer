@@ -1,12 +1,8 @@
+import os, configparser, logging
 from flask import Flask, jsonify, send_from_directory, request
 from flask_restful import Resource, Api
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token,
-    get_jwt_identity
-)
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from flask_cors import CORS
-
-import os, configparser, logging
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
@@ -63,10 +59,11 @@ class Auth(Resource):
 class HomeDir(Resource):
     @jwt_required
     def get(self):
+        LOG.info("HomeDir() called")
         foo = []
-        current_identity = get_jwt_identity()
+        user = get_jwt_identity()
         for section in libraries.sections():
-            if dict(current_identity)["user_id"] in libraries[section]['users'].split(','):
+            if user in libraries[section]['users'].split(','):
                 foo.append(section)
         return jsonify(foo)
 
@@ -93,9 +90,11 @@ class Downloader(Resource):
                 user = get_jwt_identity()
                 LOG.info(f"{user} requesting download: {library}/{path}")
                 LOG.debug(f"real path: {libraries[library]['path']}/{path}")
+
                 if user not in libraries[library]['users']:
                     LOG.info(f"Denied access to {user}")
                     return "You do not have permission to access this library", 403
+
                 LOG.info(f"Granted access to {user}")
                 return send_from_directory(libraries[library]['path'],path,as_attachment=True)
             else:
