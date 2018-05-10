@@ -12,8 +12,8 @@ class Stuff extends Component {
     this.state = {
 
                     libraries: [{ 
-                      label: "TV",
-                      path: "MRAO",
+                      label: "default",
+                      path: "",
                     }],
                     files: [],
                      path: "",
@@ -26,20 +26,27 @@ class Stuff extends Component {
 
                     crumbs: [{ label: "Media", path: "/#/Media" }]
                 };  
-   this.listLibraries();
+   this.getLibraryList();
    console.log(this.props.location.pathname);
   }
-  listLibraries() {
-    let apiBaseUrl = "http://192.168.0.138:5000/api/v1/home";
+
+  apiCall(path,cb){
+    let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
     let token = localStorage.getItem('id_token');
-    let self = this;
     let config = {
       headers: {
         Authorization: 'Bearer ' + token,
       }
     }
-    axios.get(apiBaseUrl,config)
-    .then(function (response) {
+    axios.get(apiBaseUrl+path,config)
+    .then(cb)
+    .catch(function (error) {
+    console.log(error);
+    });
+  }
+  getLibraryList() {
+    let self = this;
+    this.apiCall('/home',function (response) {
         console.log(response);
         if(response.status === 200){
           self.setState({
@@ -48,73 +55,47 @@ class Stuff extends Component {
         } else {
             console.log("A vague error has occured");
         }
-    })
-    .catch(function (error) {
-    console.log(error);
     });
   }
   //hmmmm
   bcClick(path,i) {
-    let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
-    let token = localStorage.getItem('id_token');
+
     let self = this;
     const crumbs = this.state.crumbs;
-    let config = {
-      headers: {
-        Authorization: 'Bearer ' + token,
+    path = '/' + path
+    this.apiCall(path, function (response) {
+      console.log(response);
+      if(response.status === 200){
+        console.log(response.data);          
+        self.setState({
+          crumbs: crumbs.slice(0,i+1)
+        })
+        self.setState({
+          files: response.data,
+          path: path,
+        });
+      } else {
+          console.log("A vague error has occured");
       }
-    }
-    path = '/' + path;
-    axios.get(apiBaseUrl + path,config)
-    .then(function (response) {
-        console.log(response);
-        if(response.status === 200){
-          console.log(response.data);          
-          self.setState({
-            crumbs: crumbs.slice(0,i+1)
-          })
-          self.setState({
-            files: response.data,
-            path: path,
-          });
-        } else {
-            console.log("A vague error has occured");
-        }
     })
-    .catch(function (error) {
-    console.log(error);
-    });
   }
+  
   handleClick(path){
-    let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
-    let token = localStorage.getItem('id_token');
     let self = this;
-    let currentd = this.state.path + "/" + path;
-    
-    let config = {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      }
-    }
-    console.log(this.state.path);
-
-    axios.get(apiBaseUrl+currentd,config)
-    .then(function (response) {
-        console.log(response);
+    let currentDir = this.state.path + "/" + path;
+    this.apiCall(currentDir, function (response) {
+      console.log(response);
         if(response.status === 200){
           console.log(response.data);
           self.addCrumb(path);
           self.setState({
             files: response.data,
-            path: currentd,
+            path: currentDir,
           });
         } else {
             console.log("A vague error has occured");
         }
     })
-    .catch(function (error) {
-    console.log(error);
-    });
   }
 
   libraryClick(path) {
