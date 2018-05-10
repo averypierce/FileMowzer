@@ -41,11 +41,11 @@ class FolderView extends Component {
 
     //This function oughta be refactoered to outside this view and passed in
     //discussion thread: https://stackoverflow.com/questions/29452031/how-to-handle-file-downloads-with-jwt-based-authentication
-    dler(path) {
+    dler(directory, filename) {
         let anchor = document.createElement("a");
-        let file = 'http://192.168.0.138:5000/download/';
+        let path =  directory + '/' + filename;
+        let file = 'http://192.168.0.138:5000/download' + path;
         console.log("path is: " + path)
-        return "nah"
         let token = localStorage.getItem('id_token');
         let headers = new Headers();
         headers.append('Authorization', 'Bearer ' + token);
@@ -55,7 +55,7 @@ class FolderView extends Component {
             .then(blobby => {
                 let objectUrl = window.URL.createObjectURL(blobby);
                 anchor.href = objectUrl;
-                anchor.download = 'test.txt';
+                anchor.download = filename;
                 anchor.click();
                 window.URL.revokeObjectURL(objectUrl);
         });
@@ -71,7 +71,7 @@ class FolderView extends Component {
                         path = {this.state.directory}
                         label = {filename}
                         key = {i}
-                        onClick = {() => this.dler(filename)}
+                        onClick = {() => this.dler(this.state.directory,filename)}
                     />
                 )
             } //else

@@ -26,8 +26,6 @@ class Stuff extends Component {
                 };  
    console.log(this.props.location.pathname);
   }
-
-
   //hmmmm
   bcClick(path,i) {
     let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
