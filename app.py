@@ -15,7 +15,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 
 downloadApi = Api(app,prefix="/download")
 api = Api(app, prefix="/api/v1")
-authApi = Api(app, prefix="/auth")
+authApi = Api(app)
 jwt = JWTManager(app)
 
 def loadConfig(filename):
@@ -95,7 +95,7 @@ class Downloader(Resource):
             return str(e)
 
 downloadApi.add_resource(Downloader, '/<library>/<path:path>')
-authApi.add_resource(Auth)
+authApi.add_resource(Auth,"/auth")
 api.add_resource(HomeDir, '/home')
 api.add_resource(ListDir,
     '/<library>/<path:path>',

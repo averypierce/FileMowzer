@@ -90,6 +90,21 @@ class Stuff extends Component {
     });
   }
 
+  libraryClick(path) {
+    
+    this.setState(
+      { 
+        files: [],
+        path: "",
+        crumbs: [{
+          label: "Media",
+          path: "/#/Media"
+        }]
+      }
+    ,() => this.handleClick(path)
+    );     
+  }
+
   addCrumb(dir){
     const crumbs = this.state.crumbs;
     let npath = crumbs.slice(-1)[0].path + '/' + dir;
@@ -105,15 +120,18 @@ class Stuff extends Component {
 
     return (
       <div>
+        <MuiThemeProvider>
+          <RaisedButton type="submit" primary={true} label="TV"  onClick={() => this.libraryClick("tv")}/>
+        </MuiThemeProvider>
+
+        <br></br>
+        <br></br>
         <h3>
           <BreadCrumb 
             rootdir="media" crumbs={this.state.crumbs} onClick = {(foo,bar) => this.bcClick(foo,bar)}>
           </BreadCrumb>
         </h3>
-        <MuiThemeProvider>
-          <RaisedButton type="submit" primary={true} label="TV"  onClick={() => this.handleClick("tv")}/>
-        </MuiThemeProvider>
-        <br></br>
+
 
         <FolderView
           directory = {this.state.path} files = {this.state.files} onClick = {(foo) => this.handleClick(foo)}> 

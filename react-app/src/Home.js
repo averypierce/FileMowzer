@@ -5,7 +5,7 @@ class Home extends Component {
     return (
       <div>
         <h2>HELLO</h2>
-        <p>Welcome to this rel good, WIP file browser.</p>
+        <p>Welcome to this rel good file browser.</p>
        </div>
     );
   }
