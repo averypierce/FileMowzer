@@ -4,19 +4,13 @@ from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+from flask_cors import CORS
+
 import configparser
 import os
 
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = 'super-secret'
-app.config['JWT_SECRET_KEY'] = 'super-secret2'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
-
-downloadApi = Api(app,prefix="/download")
-api = Api(app, prefix="/api/v1")
-authApi = Api(app)
-jwt = JWTManager(app)
+cors = CORS(app, resources={r"*": {"origins": "http://192.168.0.138:3000"}})
 
 def loadConfig(filename):
     config = configparser.ConfigParser()
@@ -27,8 +21,19 @@ def loadConfig(filename):
     return config
 
 rootdir = os.path.dirname(os.path.abspath(__file__))
-users = loadConfig(rootdir+r'\users.ini')
-config = loadConfig(rootdir+r'\dirs.ini')
+settings = loadConfig(rootdir+r'/settings.ini')['DEFAULT']
+users = loadConfig(rootdir+r'/users.ini')
+libraries = loadConfig(rootdir+r'/libraries.ini')
+
+app.config['SECRET_KEY'] = settings['SECRET_KEY']
+app.config['JWT_SECRET_KEY'] = settings['JWT_SECRET_KEY']
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
+
+downloadApi = Api(app,prefix="/download")
+api = Api(app, prefix="/api/v1")
+authApi = Api(app)
+jwt = JWTManager(app)
+
 
 class Auth(Resource):
     def post(self):
@@ -54,8 +59,8 @@ class HomeDir(Resource):
     def get(self):
         foo = []
         current_identity = get_jwt_identity()
-        for section in config.sections():
-            if dict(current_identity)["user_id"] in config[section]['users'].split(','):
+        for section in libraries.sections():
+            if dict(current_identity)["user_id"] in libraries[section]['users'].split(','):
                 foo.append(section)
         return jsonify(foo)
 
@@ -66,11 +71,11 @@ class ListDir(Resource):
         path = '/' + path
         if not library:
             return False
-        if os.path.isfile(config[library]['path']+path):
+        if os.path.isfile(libraries[library]['path']+path):
             print("IS FILE " + path)
             return [path]
-        if user in config[library]['users'].split(','):
-            return os.listdir(config[library]['path']+path)
+        if user in libraries[library]['users'].split(','):
+            return os.listdir(libraries[library]['path']+path)
         return ["not found"]
 
 class Downloader(Resource):
@@ -78,16 +83,16 @@ class Downloader(Resource):
     def get(self,library=None,path=""):
 
         try:
-            if library in config.sections():
+            if library in libraries.sections():
                 user = get_jwt_identity()
                 print(user + " requesting file download")
-                if user not in config[library]['users']:
+                if user not in libraries[library]['users']:
                     print("Denyed")
                     return "You do not have permission to access this resource", 403
                 print("library: " + library)
-                print(config[library]['path'])
+                print(libraries[library]['path'])
                 print(path)
-                return send_from_directory(config[library]['path'],path,as_attachment=True)
+                return send_from_directory(libraries[library]['path'],path,as_attachment=True)
             else:
                 return "invalid or DNE", 401
 
