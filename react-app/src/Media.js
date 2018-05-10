@@ -117,10 +117,6 @@ class Stuff extends Component {
         </MuiThemeProvider>
         <br></br>
 
-<MuiThemeProvider>
-  <RaisedButton type="submit" primary={true} label="DOWNLOAD"  onClick={() => this.dler()}/>
-</MuiThemeProvider>
-
         <FolderView
           directory = {this.state.path} files = {this.state.files} onClick = {(foo) => this.handleClick(foo)}> 
         </FolderView>
