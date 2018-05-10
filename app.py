@@ -6,8 +6,13 @@ from flask_jwt_extended import (
 )
 from flask_cors import CORS
 
-import configparser
-import os
+import os, configparser, logging
+
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("[%(levelname)s]  %(message)s"))
+LOG.addHandler(handler)
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "http://192.168.0.138:3000"}})
@@ -21,9 +26,9 @@ def loadConfig(filename):
     return config
 
 rootdir = os.path.dirname(os.path.abspath(__file__))
-settings = loadConfig(rootdir+r'/settings.ini')['DEFAULT']
-users = loadConfig(rootdir+r'/users.ini')
-libraries = loadConfig(rootdir+r'/libraries.ini')
+settings = loadConfig(f'{rootdir}/settings.ini')['DEFAULT']
+users = loadConfig(f'{rootdir}/users.ini')
+libraries = loadConfig(f'{rootdir}/libraries.ini')
 
 app.config['SECRET_KEY'] = settings['SECRET_KEY']
 app.config['JWT_SECRET_KEY'] = settings['JWT_SECRET_KEY']
@@ -46,9 +51,10 @@ class Auth(Resource):
             return "missing password parameter", 400
 
         if users[username]["password"] != password:
+            LOG.warning(f"user {username} invalid login attempt")
             return "Invalid username or password", 401
 
-        #Identity can be any data that is json serializable
+        LOG.info(f"user {username} logged in")
         access_token = create_access_token(identity = username)
         access_token = jsonify(access_token = access_token)
         access_token.status_code = 200
@@ -72,7 +78,7 @@ class ListDir(Resource):
         if not library:
             return False
         if os.path.isfile(libraries[library]['path']+path):
-            print("IS FILE " + path)
+            LOG.debug(libraries[library]['path']+path + " is a file")
             return [path]
         if user in libraries[library]['users'].split(','):
             return os.listdir(libraries[library]['path']+path)
@@ -85,13 +91,12 @@ class Downloader(Resource):
         try:
             if library in libraries.sections():
                 user = get_jwt_identity()
-                print(user + " requesting file download")
+                LOG.info(f"{user} requesting download: {library}/{path}")
+                LOG.debug(f"real path: {libraries[library]['path']}/{path}")
                 if user not in libraries[library]['users']:
-                    print("Denyed")
-                    return "You do not have permission to access this resource", 403
-                print("library: " + library)
-                print(libraries[library]['path'])
-                print(path)
+                    LOG.info(f"Denied access to {user}")
+                    return "You do not have permission to access this library", 403
+                LOG.info(f"Granted access to {user}")
                 return send_from_directory(libraries[library]['path'],path,as_attachment=True)
             else:
                 return "invalid or DNE", 401
