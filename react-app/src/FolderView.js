@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 function File(props) {
     return (
-        <a  href={"#/Media"+props.path+"/"+props.label} 
+        <a  href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
+        realURL = {"#/Media"+props.path+"/"+props.label}
+            
             class="list-group-item list-group-item-action"
             onClick = {props.onClick}> 
                 {props.label} 
@@ -13,7 +15,8 @@ function File(props) {
 function Folder(props) {
     return (
         <a 
-            href = {"#/Media" + props.path + "/" + props.label}
+        href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
+        realURL = {"#/Media"+props.path+"/"+props.label}
             class ="list-group-item list-group-item-action" 
             onClick = {props.onClick}>
                 <i class = "material-icons">folder</i> {props.label}
