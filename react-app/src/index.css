@@ -1,40 +1,13 @@
-body {
+.content {
   padding: 10px;
 }
 
-ul.header li {
-  display: inline;
-  list-style-type: none;
-  margin: 0;
-}
-ul.header {
-  background-color: #111;
-  padding: 0;
-}
-ul.header li a {
-  color: #FFF;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 20px;
-  display: inline-block;
-}
-.content {
-  background-color: #FFF;
-  padding: 20px;
-}
-.content h2 {
-  padding: 0;
-  margin: 0;
-}
-
-.active {
-    background-color: #0099FF;
-  }
-
+/* makes bread crumbs horizantal instead of bullet list */
 ul#menu li {
     display:inline;
 }
 
+/* Centers icons in */
 i { 
   vertical-align: bottom; 
 }
