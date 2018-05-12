@@ -31,7 +31,6 @@ class Stuff extends Component {
   }
 
   dler(directory, filename) {
-    let anchor = document.createElement("a");
     let path =  directory + '/' + filename;
     let file = 'http://192.168.0.138:5000/download' + path;
     let token = localStorage.getItem('id_token');
@@ -81,7 +80,8 @@ class Stuff extends Component {
         }
     });
   }
-  //hmmmm
+
+  //breadcrumb print
   bcClick(path,i) {
 
     let self = this;
