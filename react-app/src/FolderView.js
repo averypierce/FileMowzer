@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from 'axios';
 
 function File(props) {
     return (
@@ -39,27 +40,31 @@ class FolderView extends Component {
         }
     }
 
-    //This function oughta be refactoered to outside this view and passed in
-    //discussion thread: https://stackoverflow.com/questions/29452031/how-to-handle-file-downloads-with-jwt-based-authentication
     dler(directory, filename) {
         let anchor = document.createElement("a");
         let path =  directory + '/' + filename;
         let file = 'http://192.168.0.138:5000/download' + path;
-        console.log("path is: " + path)
         let token = localStorage.getItem('id_token');
-        let headers = new Headers();
-        headers.append('Authorization', 'Bearer ' + token);
-    
-        fetch(file, { headers })
-            .then(response => response.blob())
-            .then(blobby => {
-                let objectUrl = window.URL.createObjectURL(blobby);
-                anchor.href = objectUrl;
-                anchor.download = filename;
-                anchor.click();
-                window.URL.revokeObjectURL(objectUrl);
+        let config = {
+            headers: {
+              Authorization: 'Bearer ' + token,
+            }
+        }  
+        axios.get(file,config)
+        .then((response) =>  {
+            if(response.status === 200){
+                let link = document.createElement('a');
+                document.body.appendChild(link);
+                link.href = `${file}?jwt=${response.data.access_token}`;
+                link.setAttribute('type', 'hidden');
+                link.click();
+            }
+        })
+        .catch(function (error) {
+        console.log(error);
         });
-    }
+
+    }    
 
     render() {
 

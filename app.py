@@ -1,7 +1,10 @@
 import os, configparser, logging
+import jwt as vanillajwt #aliasing because JWTManager uses 'jwt' name
+from datetime import timedelta
+
 from flask import Flask, jsonify, send_from_directory, request
 from flask_restful import Resource, Api
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, jwt_optional
 from flask_cors import CORS
 
 LOG = logging.getLogger(__name__)
@@ -11,7 +14,9 @@ handler.setFormatter(logging.Formatter("[%(levelname)s]  %(message)s"))
 LOG.addHandler(handler)
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": "http://192.168.0.138:3000"}})
+cors = CORS(app, resources={r"*": {"origins": ["http://192.168.0.138:3000","http://localhost:3000"]}})
+
+
 
 def loadConfig(filename):
     config = configparser.ConfigParser()
@@ -70,6 +75,7 @@ class HomeDir(Resource):
 class ListDir(Resource):
     @jwt_required
     def get(self,library=None,path=""):
+
         user = get_jwt_identity()
         path = '/' + path
         if not library:
@@ -81,27 +87,42 @@ class ListDir(Resource):
             return os.listdir(libraries[library]['path']+path)
         return ["not found"]
 
+
+#set up to accept a temp token
 class Downloader(Resource):
-    @jwt_required
+    @jwt_optional
     def get(self,library=None,path=""):
+        user = get_jwt_identity()
+        if user:
+            #send back a token containing whatever information it is we need
+            downloadToken = create_access_token({'library': library,'path': path,'user': user},expires_delta=timedelta(seconds=3))
+            downloadToken = jsonify(access_token = downloadToken)
+            downloadToken.status_code = 200
+            return downloadToken
 
-        try:
-            if library in libraries.sections():
-                user = get_jwt_identity()
-                LOG.info(f"{user} requesting download: {library}/{path}")
-                LOG.debug(f"real path: {libraries[library]['path']}/{path}")
+        else: #look for query string containing the token we just sent them
 
-                if user not in libraries[library]['users']:
-                    LOG.info(f"Denied access to {user}")
-                    return "You do not have permission to access this library", 403
+            token = request.args.get('jwt')
+            dt = vanillajwt.decode(token,settings['JWT_SECRET_KEY'],algorithms=['HS256'])
+            library = dt['identity']['library']
+            path = dt['identity']['path']
+            user = dt['identity']['user']
+            try:
+                if library in libraries.sections():
+                    LOG.info(f"{user} requesting download: {library}/{path}")
+                    LOG.debug(f"real path: {libraries[library]['path']}/{path}")
 
-                LOG.info(f"Granted access to {user}")
-                return send_from_directory(libraries[library]['path'],path,as_attachment=True)
-            else:
-                return "invalid or DNE", 401
+                    if user not in libraries[library]['users']:
+                        LOG.info(f"Denied access to {user}")
+                        return "You do not have permission to access this library", 403
 
-        except Exception as e:
-            return str(e)
+                    LOG.info(f"Granted access to {user}")
+                    return send_from_directory(libraries[library]['path'],path,as_attachment=True)
+                else:
+                    return "invalid or DNE", 401
+
+            except Exception as e:
+                return str(e)
 
 downloadApi.add_resource(Downloader, '/<library>/<path:path>')
 authApi.add_resource(Auth,"/auth")

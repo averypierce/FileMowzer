@@ -47,7 +47,6 @@ class Stuff extends Component {
   getLibraryList() {
     let self = this;
     this.apiCall('/home',function (response) {
-        console.log(response);
         if(response.status === 200){
           self.setState({
             libraries: response.data.map(library => ({ label: library, path: `/#/Media/${library}`}))
@@ -64,9 +63,7 @@ class Stuff extends Component {
     const crumbs = this.state.crumbs;
     path = '/' + path
     this.apiCall(path, function (response) {
-      console.log(response);
       if(response.status === 200){
-        console.log(response.data);          
         self.setState({
           crumbs: crumbs.slice(0,i+1)
         })
@@ -79,14 +76,12 @@ class Stuff extends Component {
       }
     })
   }
-  
+
   handleClick(path){
     let self = this;
     let currentDir = this.state.path + "/" + path;
     this.apiCall(currentDir, function (response) {
-      console.log(response);
         if(response.status === 200){
-          console.log(response.data);
           self.addCrumb(path);
           self.setState({
             files: response.data,
