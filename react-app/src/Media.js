@@ -165,8 +165,6 @@ class Stuff extends Component {
             {userLibraries}
           </div>
         </MuiThemeProvider>
-
-        <br></br>
         <br></br>
         <h3>
           <BreadCrumb 
