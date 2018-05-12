@@ -29,7 +29,8 @@ class FolderView extends Component {
         this.state = {
             directory: props.directory,
             contents: props.files,
-            onClick: props.onClick
+            onClick: props.onClick,
+            dler: props.dler,
         };
     }
 
@@ -40,43 +41,17 @@ class FolderView extends Component {
         }
     }
 
-    dler(directory, filename) {
-        let anchor = document.createElement("a");
-        let path =  directory + '/' + filename;
-        let file = 'http://192.168.0.138:5000/download' + path;
-        let token = localStorage.getItem('id_token');
-        let config = {
-            headers: {
-              Authorization: 'Bearer ' + token,
-            }
-        }  
-        axios.get(file,config)
-        .then((response) =>  {
-            if(response.status === 200){
-                let link = document.createElement('a');
-                document.body.appendChild(link);
-                link.href = `${file}?jwt=${response.data.access_token}`;
-                link.setAttribute('type', 'hidden');
-                link.click();
-            }
-        })
-        .catch(function (error) {
-        console.log(error);
-        });
-
-    }    
-
     render() {
 
         let bcbar = this.state.contents.map((filename,i) => {
-
+            //should change backend to separate files and folders in results
             if(filename.split('.').pop() === "avi" || filename.split('.').pop() === "mkv"){
                 return (
                     <File
                         path = {this.state.directory}
                         label = {filename}
                         key = {i}
-                        onClick = {() => this.dler(this.state.directory,filename)}
+                        onClick = {() => this.state.dler(this.state.directory,filename)}
                     />
                 )
             } //else

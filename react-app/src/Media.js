@@ -30,6 +30,31 @@ class Stuff extends Component {
    console.log(this.props.location.pathname);
   }
 
+  dler(directory, filename) {
+    let anchor = document.createElement("a");
+    let path =  directory + '/' + filename;
+    let file = 'http://192.168.0.138:5000/download' + path;
+    let token = localStorage.getItem('id_token');
+    let config = {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        }
+    }  
+    axios.get(file,config)
+    .then((response) =>  {
+        if(response.status === 200){
+            let link = document.createElement('a');
+            document.body.appendChild(link);
+            link.href = `${file}?jwt=${response.data.access_token}`;
+            link.setAttribute('type', 'hidden');
+            link.click();
+        }
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
+  }    
+
   apiCall(path,cb){
     let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
     let token = localStorage.getItem('id_token');
@@ -151,7 +176,7 @@ class Stuff extends Component {
 
 
         <FolderView
-          directory = {this.state.path} files = {this.state.files} onClick = {(foo) => this.handleClick(foo)}> 
+          directory = {this.state.path} files = {this.state.files} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.handleClick(foo)}> 
         </FolderView>
       </div>
     );
