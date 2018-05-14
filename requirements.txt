@@ -1,0 +1,5 @@
+jwt
+flask
+flask_restful
+flask_jwt_extended
+flask_cors
