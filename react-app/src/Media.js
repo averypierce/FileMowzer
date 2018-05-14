@@ -19,12 +19,14 @@ class Stuff extends Component {
                       path: "",
                     }],
                     files: [],
-                     path: "",
+                    path: "",
  
                     filesMow: [{ 
                       label: "",
                       path: "",
-                      isDirectory: false
+                      type: "",
+                      date: "",
+                      size: "".
                     }],
 
                     crumbs: [{ label: "Media", path: "/#/Media" }]
@@ -95,7 +97,7 @@ class Stuff extends Component {
           crumbs: crumbs.slice(0,i+1)
         })
         self.setState({
-          files: response.data,
+          files: response.data.files,
           path: path,
         });
       } else {
@@ -107,11 +109,13 @@ class Stuff extends Component {
   handleClick(path){
     let self = this;
     let currentDir = this.state.path + "/" + path;
+
     this.apiCall(currentDir, function (response) {
         if(response.status === 200){
           self.addCrumb(path);
+          console.log(response.data);
           self.setState({
-            files: response.data,
+            files: response.data.files,
             path: currentDir,
           });
         } else {

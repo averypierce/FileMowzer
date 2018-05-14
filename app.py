@@ -90,7 +90,7 @@ class ListDir(Resource):
         return ["not found"]
 
 #Returns object containing Files: and Folders:
-class GetDir():
+class GetDir(Resource):
     @jwt_required
     def get(self,library=None,path=""):
 
@@ -152,7 +152,7 @@ class Downloader(Resource):
 downloadApi.add_resource(Downloader, '/<library>/<path:path>')
 authApi.add_resource(Auth,"/auth")
 api.add_resource(HomeDir, '/home')
-api.add_resource(ListDir,
+api.add_resource(GetDir,
     '/<library>/<path:path>',
     '/<library>')
     
