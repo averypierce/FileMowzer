@@ -105,9 +105,10 @@ class GetDir():
         if user in libraries[library]['users'].split(','):
             libraryPath = libraries[library]['path']+path
             listdirResults = os.listdir(libraryPath)
-            for filen in listdirResults:
-                if os.path.isfile(libraryPath + filen);
-                    contents['files'].append(filen)
+            
+            for file in listdirResults:
+                if os.path.isfile(libraryPath + file):
+                    contents['files'].append(file)
                 else:
                     contents['folders'].append(file)
         return contents
