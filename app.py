@@ -109,7 +109,7 @@ class GetDir():
             for file in listdirResults:
                 if os.path.isfile(libraryPath + file):
                     contents['files'].append(file)
-                else:
+                else if os.path.isdir(libraryPath + file):
                     contents['folders'].append(file)
         return contents
 
