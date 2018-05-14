@@ -61,6 +61,7 @@ class Auth(Resource):
         access_token.status_code = 200
         return access_token
 
+#Returns a list of libraries that the logged in user is a member of
 class HomeDir(Resource):
     @jwt_required
     def get(self):
@@ -72,6 +73,7 @@ class HomeDir(Resource):
                 foo.append(section)
         return jsonify(foo)
 
+#Returns names of all files and folders in a directory as a list
 class ListDir(Resource):
     @jwt_required
     def get(self,library=None,path=""):
@@ -87,6 +89,29 @@ class ListDir(Resource):
             return os.listdir(libraries[library]['path']+path)
         return ["not found"]
 
+#Returns object containing Files: and Folders:
+class GetDir():
+    @jwt_required
+    def get(self,library=None,path=""):
+
+        user = get_jwt_identity()
+        path = '/' + path
+        contents = {'folders': [], 'files': []}
+        if not library:
+            return "Library does not exist", 400
+        if os.path.isfile(libraries[library]['path']+path):
+            LOG.debug(libraries[library]['path']+path + " is a file")
+            return "requested path is not a directory", 400
+        if user in libraries[library]['users'].split(','):
+            libraryPath = libraries[library]['path']+path
+            listdirResults = os.listdir(libraryPath)
+            
+            for file in listdirResults:
+                if os.path.isfile(libraryPath + file):
+                    contents['files'].append(file)
+                elif os.path.isdir(libraryPath + file):
+                    contents['folders'].append(file)
+        return contents
 
 #set up to accept a temp token
 class Downloader(Resource):
@@ -130,5 +155,6 @@ api.add_resource(HomeDir, '/home')
 api.add_resource(ListDir,
     '/<library>/<path:path>',
     '/<library>')
+    
 if __name__ == '__main__':
-    app.run(host='192.168.0.138',debug=True)
+    app.run(host=settings['hostname'],debug=True)
