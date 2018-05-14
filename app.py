@@ -109,7 +109,7 @@ class GetDir():
             for file in listdirResults:
                 if os.path.isfile(libraryPath + file):
                     contents['files'].append(file)
-                else if os.path.isdir(libraryPath + file):
+                elif os.path.isdir(libraryPath + file):
                     contents['folders'].append(file)
         return contents
 
@@ -157,4 +157,4 @@ api.add_resource(ListDir,
     '/<library>')
     
 if __name__ == '__main__':
-    app.run(host='192.168.0.138',debug=True)
+    app.run(host=settings['hostname'],debug=True)

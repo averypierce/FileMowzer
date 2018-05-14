@@ -5,6 +5,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 class Login extends Component {
     constructor(props){
         super(props);
@@ -19,7 +21,8 @@ class Login extends Component {
     }
 
  handleClick(event){
-    let apiBaseUrl = "http://192.168.0.138:5000/";
+    event.preventDefault() //prevent chrome from trying to handle GET and adding ? mark to URL 
+    let apiBaseUrl = `http://${serverHost}:5000/`;
     let payload = {
         "username":this.state.username,
         "password":this.state.password

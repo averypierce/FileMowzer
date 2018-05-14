@@ -5,6 +5,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import BreadCrumb from "./BreadCrumb";
 import FolderView from "./FolderView";
 
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
+
 class Stuff extends Component {
 
   constructor(props) {
@@ -29,10 +32,9 @@ class Stuff extends Component {
    this.getLibraryList();
    console.log(this.props.location.pathname);
   }
-
   dler(directory, filename) {
     let path =  directory + '/' + filename;
-    let file = 'http://192.168.0.138:5000/download' + path;
+    let file = `http://${serverHost}:5000/download`; + path;
     let token = localStorage.getItem('id_token');
     let config = {
         headers: {
@@ -55,7 +57,7 @@ class Stuff extends Component {
   }    
 
   apiCall(path,cb){
-    let apiBaseUrl = "http://192.168.0.138:5000/api/v1";
+    let apiBaseUrl = `http://${serverHost}:5000/api/v1`;
     let token = localStorage.getItem('id_token');
     let config = {
       headers: {
