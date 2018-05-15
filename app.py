@@ -7,7 +7,7 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, jwt_optional
 from flask_cors import CORS
 
-from .directoryTools import DirStat
+from directoryTools import dirStat
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
@@ -106,7 +106,7 @@ class GetDir(Resource):
             return "requested path is not a directory", 400
         if user in libraries[library]['users'].split(','):
             libraryPath = libraries[library]['path']+path
-            contents = DirStat(libraryPath)
+            contents = dirStat(libraryPath)
 
         return jsonify(contents)
 
@@ -149,7 +149,7 @@ class Downloader(Resource):
 downloadApi.add_resource(Downloader, '/<library>/<path:path>')
 authApi.add_resource(Auth,"/auth")
 api.add_resource(HomeDir, '/home')
-api.add_resource(GetDir,
+api.add_resource(ListDir,
     '/<library>/<path:path>',
     '/<library>')
     

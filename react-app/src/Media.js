@@ -36,7 +36,7 @@ class Stuff extends Component {
   }
   dler(directory, filename) {
     let path =  directory + '/' + filename;
-    let file = `http://${serverHost}:5000/download`; + path;
+    let file = `http://${serverHost}:5000/download` + path;
     let token = localStorage.getItem('id_token');
     let config = {
         headers: {
@@ -97,7 +97,7 @@ class Stuff extends Component {
           crumbs: crumbs.slice(0,i+1)
         })
         self.setState({
-          files: response.data.files,
+          files: response.data,
           path: path,
         });
       } else {
@@ -115,7 +115,7 @@ class Stuff extends Component {
           self.addCrumb(path);
           console.log(response.data);
           self.setState({
-            files: response.data.files,
+            files: response.data,
             path: currentDir,
           });
         } else {
