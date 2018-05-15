@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+/*
 import {
   Route,
   NavLink,
@@ -7,6 +8,7 @@ import {
 import Home from "./Home";
 import Media from "./Media";
 import Login from "./Login";
+*/
 import Nav from "./Nav";
 
 class Main extends Component {

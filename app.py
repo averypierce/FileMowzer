@@ -7,6 +7,8 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, jwt_optional
 from flask_cors import CORS
 
+from directoryTools import dirStat
+
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
 handler = logging.StreamHandler()
@@ -90,7 +92,7 @@ class ListDir(Resource):
         return ["not found"]
 
 #Returns object containing Files: and Folders:
-class GetDir():
+class GetDir(Resource):
     @jwt_required
     def get(self,library=None,path=""):
 
@@ -104,14 +106,9 @@ class GetDir():
             return "requested path is not a directory", 400
         if user in libraries[library]['users'].split(','):
             libraryPath = libraries[library]['path']+path
-            listdirResults = os.listdir(libraryPath)
-            
-            for file in listdirResults:
-                if os.path.isfile(libraryPath + file):
-                    contents['files'].append(file)
-                elif os.path.isdir(libraryPath + file):
-                    contents['folders'].append(file)
-        return contents
+            contents = dirStat(libraryPath)
+
+        return jsonify(contents)
 
 #set up to accept a temp token
 class Downloader(Resource):

@@ -3,11 +3,13 @@ import React, { Component } from "react";
 function File(props) {
     return (
         <a  href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realURL = {"#/Media"+props.path+"/"+props.label}
+        realurl = {"#/Media"+props.path+"/"+props.label}
             
-            class="list-group-item list-group-item-action"
-            onClick = {props.onClick}> 
-                {props.label} 
+            className="list-group-item list-group-item-action d-flex"
+            onClick = {props.onClick}>
+            <div className="mr-auto"> {props.label}</div>
+            <div className="px-2">FILE SIZE</div>
+            <div className="px-2">DATE</div>
         </a>
     );
 }
@@ -16,10 +18,13 @@ function Folder(props) {
     return (
         <a 
         href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realURL = {"#/Media"+props.path+"/"+props.label}
-            class ="list-group-item list-group-item-action" 
-            onClick = {props.onClick}>
-                <i class = "material-icons">folder</i> {props.label}
+        realurl = {"#/Media"+props.path+"/"+props.label}
+        className ="list-group-item list-group-item-action d-flex flex-row" 
+        onClick = {props.onClick}>
+            
+            <div className="mr-auto"><i className = "material-icons">folder</i> {props.label}</div>
+            <div className="px-2">-</div>
+            <div className="px-2">DATE</div>
         </a>
     );
 }
@@ -47,7 +52,7 @@ class FolderView extends Component {
 
         let bcbar = this.state.contents.map((filename,i) => {
             //should change backend to separate files and folders in results
-            if(filename.split('.').pop() === "avi" || filename.split('.').pop() === "mkv"){
+            if(filename.split('.').pop() === "avi" || filename.split('.').pop() === "mkv"  || filename.split('.').pop() === "jpg"){
                 return (
                     <File
                         path = {this.state.directory}
@@ -69,7 +74,7 @@ class FolderView extends Component {
 
         return (
             <div>  
-                <ul class="list-group list-group-flush ">              
+                <ul className="list-group list-group-flush ">              
                     {bcbar}
                 </ul>
             </div>

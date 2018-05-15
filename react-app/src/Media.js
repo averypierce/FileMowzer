@@ -19,12 +19,14 @@ class Stuff extends Component {
                       path: "",
                     }],
                     files: [],
-                     path: "",
+                    path: "",
  
                     filesMow: [{ 
                       label: "",
                       path: "",
-                      isDirectory: false
+                      type: "",
+                      date: "",
+                      size: ""
                     }],
 
                     crumbs: [{ label: "Media", path: "/#/Media" }]
@@ -34,7 +36,7 @@ class Stuff extends Component {
   }
   dler(directory, filename) {
     let path =  directory + '/' + filename;
-    let file = `http://${serverHost}:5000/download`; + path;
+    let file = `http://${serverHost}:5000/download` + path;
     let token = localStorage.getItem('id_token');
     let config = {
         headers: {
@@ -107,9 +109,11 @@ class Stuff extends Component {
   handleClick(path){
     let self = this;
     let currentDir = this.state.path + "/" + path;
+
     this.apiCall(currentDir, function (response) {
         if(response.status === 200){
           self.addCrumb(path);
+          console.log(response.data);
           self.setState({
             files: response.data,
             path: currentDir,

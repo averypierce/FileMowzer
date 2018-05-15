@@ -12,25 +12,25 @@ class Nav extends Component {
         return(
             <HashRouter>
               <div>            
-              <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a class="navbar-brand" href="#/">FileMowzer</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+              <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+                <a className="navbar-brand" href="#/">FileMowzer</a>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">                      
+                <div className="collapse navbar-collapse" id="navbarText">
+                    <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">                      
                             <NavLink exact to="/">
-                                <a class="nav-link" href="#/">Home</a>
+                                <div className="nav-link" href="#/">Home</div>
                             </NavLink>
                         </li>
-                        <li class="nav-item">                      
+                        <li className="nav-item">                      
                                 <NavLink to="/Media">
-                                    <a class="nav-link" href="#/Media">Media</a>
+                                    <div className="nav-link" href="#/Media">Media</div>
                                 </NavLink></li>                       
-                        <li class="nav-item">
+                        <li className="nav-item">
                             <NavLink to="/Login">
-                                <a class="nav-link" href="#/Login">Login</a>
+                                <div className="nav-link" href="#/Login">Login</div>
                             </NavLink>
                         </li>
                     </ul>
