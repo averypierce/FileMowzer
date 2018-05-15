@@ -3,13 +3,13 @@ import React, { Component } from "react";
 function File(props) {
     return (
         <a  href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realURL = {"#/Media"+props.path+"/"+props.label}
+        realurl = {"#/Media"+props.path+"/"+props.label}
             
-            class="list-group-item list-group-item-action d-flex"
+            className="list-group-item list-group-item-action d-flex"
             onClick = {props.onClick}>
-            <div class="mr-auto"> {props.label}</div>
-            <div class="px-2">FILE SIZE</div>
-            <div class="px-2">DATE</div>
+            <div className="mr-auto"> {props.label}</div>
+            <div className="px-2">FILE SIZE</div>
+            <div className="px-2">DATE</div>
         </a>
     );
 }
@@ -18,13 +18,13 @@ function Folder(props) {
     return (
         <a 
         href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realURL = {"#/Media"+props.path+"/"+props.label}
-        class ="list-group-item list-group-item-action d-flex flex-row" 
+        realurl = {"#/Media"+props.path+"/"+props.label}
+        className ="list-group-item list-group-item-action d-flex flex-row" 
         onClick = {props.onClick}>
             
-            <div class="mr-auto"><i class = "material-icons">folder</i> {props.label}</div>
-            <div class="px-2">-</div>
-            <div class="px-2">DATE</div>
+            <div className="mr-auto"><i className = "material-icons">folder</i> {props.label}</div>
+            <div className="px-2">-</div>
+            <div className="px-2">DATE</div>
         </a>
     );
 }
