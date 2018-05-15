@@ -26,7 +26,7 @@ class Stuff extends Component {
                       path: "",
                       type: "",
                       date: "",
-                      size: "".
+                      size: ""
                     }],
 
                     crumbs: [{ label: "Media", path: "/#/Media" }]
