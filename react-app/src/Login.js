@@ -22,7 +22,7 @@ class Login extends Component {
 
  handleClick(event){
     event.preventDefault() //prevent chrome from trying to handle GET and adding ? mark to URL 
-    let apiBaseUrl = `http://${serverHost}:5000/`;
+    let apiBaseUrl = `https://${serverHost}:5000/`;
     let payload = {
         "username":this.state.username,
         "password":this.state.password

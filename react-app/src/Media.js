@@ -36,7 +36,7 @@ class Stuff extends Component {
   }
   dler(directory, filename) {
     let path =  directory + '/' + filename;
-    let file = `http://${serverHost}:5000/download` + path;
+    let file = `https://${serverHost}:5000/download` + path;
     let token = localStorage.getItem('id_token');
     let config = {
         headers: {
@@ -59,7 +59,7 @@ class Stuff extends Component {
   }    
 
   apiCall(path,cb){
-    let apiBaseUrl = `http://${serverHost}:5000/api/v1`;
+    let apiBaseUrl = `https://${serverHost}:5000/api/v1`;
     let token = localStorage.getItem('id_token');
     let config = {
       headers: {

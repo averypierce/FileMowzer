@@ -16,7 +16,7 @@ handler.setFormatter(logging.Formatter("[%(levelname)s]  %(message)s"))
 LOG.addHandler(handler)
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": ["http://192.168.0.138:3000","http://localhost:3000"]}})
+cors = CORS(app, resources={r"*": {"origins": ["http://192.168.0.138:3000","http://localhost:3000","*"]}})
 
 
 
@@ -154,4 +154,7 @@ api.add_resource(ListDir,
     '/<library>')
     
 if __name__ == '__main__':
-    app.run(host=settings['hostname'],debug=True)
+    if(settings.getboolean('https')):
+        app.run(host=settings['hostname'],debug=True,ssl_context=(settings['cert'],settings['privkey']))
+    else:
+        app.run(host=settings('hostname','localhost'),debug=True)
