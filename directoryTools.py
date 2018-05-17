@@ -1,4 +1,4 @@
-import os
+import os, time
 
 
 def dirStat(path):
@@ -9,12 +9,13 @@ def dirStat(path):
 
         for entry in it:
             stat = entry.stat()
+            #time.strftime("%m/%d/%Y %H:%M %p",time.localtime(stat.st_ctime))
             #print(f"{entry.name} - type: {entry.name.split('.')[-1]} size: {convertBytes(stat.st_size)}, {stat.st_ctime}")
             if entry.is_file(): 
-                files.append({'name': entry.name,'type': entry.name.split('.')[-1], 'size': convertBytes(stat.st_size), 'ctime':stat.st_ctime})
+                files.append({'name': entry.name,'type': entry.name.split('.')[-1], 'size': convertBytes(stat.st_size), 'ctime': time.strftime("%m/%d/%Y %H:%M %p",time.localtime(stat.st_ctime))})
 
             elif entry.is_dir():
-                folders.append({'name': entry.name,'type': 'dir', 'size': '-', 'ctime':stat.st_ctime})
+                folders.append({'name': entry.name,'type': 'dir', 'size': '-', 'ctime': time.strftime("%m/%d/%Y %H:%M %p",time.localtime(stat.st_ctime))})
 
     return {'folders': folders, 'files': files}
 

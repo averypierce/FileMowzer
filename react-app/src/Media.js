@@ -96,8 +96,11 @@ class Stuff extends Component {
         self.setState({
           crumbs: crumbs.slice(0,i+1)
         })
+        let listing = response.data.files.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size}));
+        listing.push(response.data.folders.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"})));
+        console.log(listing);
         self.setState({
-          files: response.data,
+          filesMow: listing,
           path: path,
         });
       } else {
@@ -113,9 +116,12 @@ class Stuff extends Component {
     this.apiCall(currentDir, function (response) {
         if(response.status === 200){
           self.addCrumb(path);
-          console.log(response.data);
+                
+          let listing = response.data.folders.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"}));
+          listing = listing.concat(response.data.files.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size})));
+          console.log(listing);
           self.setState({
-            files: response.data,
+            filesMow: listing,
             path: currentDir,
           });
         } else {
@@ -180,7 +186,7 @@ class Stuff extends Component {
 
 
         <FolderView
-          directory = {this.state.path} files = {this.state.files} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.handleClick(foo)}> 
+          directory = {this.state.path} files = {this.state.filesMow} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.handleClick(foo)}> 
         </FolderView>
       </div>
     );

@@ -149,7 +149,7 @@ class Downloader(Resource):
 downloadApi.add_resource(Downloader, '/<library>/<path:path>')
 authApi.add_resource(Auth,"/auth")
 api.add_resource(HomeDir, '/home')
-api.add_resource(ListDir,
+api.add_resource(GetDir,
     '/<library>/<path:path>',
     '/<library>')
     
