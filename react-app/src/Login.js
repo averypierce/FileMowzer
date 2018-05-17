@@ -34,6 +34,7 @@ class Login extends Component {
             console.log("Login successfull");
             let token = response.data.access_token;
             localStorage.setItem('id_token',token);
+            window.location.replace('/#/Media');
         }
     })
     .catch(function (error) {
