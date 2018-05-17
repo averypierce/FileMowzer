@@ -33,7 +33,7 @@ class BreadCrumb extends Component {
                     path = {crumb.path}
                     label = {crumb.label}
                     key = {i}
-                    onClick = {() => this.state.onClick(crumb.path.slice(9),i)}
+                    onClick = {() => this.state.onClick(crumb.path)}
                 />
             );
         });

@@ -16,8 +16,6 @@ handler.setFormatter(logging.Formatter("[%(levelname)s]  %(message)s"))
 LOG.addHandler(handler)
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": ["http://192.168.0.138:3000","http://localhost:3000","*"]}})
-
 
 
 def loadConfig(filename):
@@ -41,6 +39,9 @@ downloadApi = Api(app,prefix="/download")
 api = Api(app, prefix="/api/v1")
 authApi = Api(app)
 jwt = JWTManager(app)
+
+
+cors = CORS(app, resources={r"*": {"origins": ["http://192.168.0.138:3000","http://localhost:3000","*"]}})
 
 
 class Auth(Resource):

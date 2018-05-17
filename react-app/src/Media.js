@@ -14,12 +14,14 @@ class Stuff extends Component {
     super(props);
     this.state = {
 
-                    libraries: [{ 
-                      label: "default",
-                      path: "",
-                    }],
-                    files: [],
-                    path: "",
+                    libraries: [
+                      //{ 
+                      //label: "default",
+                      //path: "",
+                      //}
+                    ],
+
+                    currentDirectory: "",
  
                     filesMow: [{ 
                       label: "",
@@ -28,14 +30,15 @@ class Stuff extends Component {
                       date: "",
                       size: ""
                     }],
-
-                    crumbs: [{ label: "Media", path: "/#/Media" }]
+                    crumbs: []
                 };  
    this.getLibraryList();
-   console.log(this.props.location.pathname);
   }
-  dler(directory, filename) {
-    let path =  directory + '/' + filename;
+  dler(path) {
+    if(path.startsWith("/#/Media")){
+      console.log("trimming '/#/Media' from path for download API call");
+      path = path.slice(8);      
+    }
     let file = `https://${serverHost}:5000/download` + path;
     let token = localStorage.getItem('id_token');
     let config = {
@@ -79,82 +82,40 @@ class Stuff extends Component {
           self.setState({
             libraries: response.data.map(library => ({ label: library, path: `/#/Media/${library}`}))
           })
-        } else {
-            console.log("A vague error has occured");
         }
     });
   }
 
-  //breadcrumb print
-  bcClick(path,i) {
-
+  masterClick(route) {
     let self = this;
-    const crumbs = this.state.crumbs;
-    path = '/' + path
-    this.apiCall(path, function (response) {
+    let apiRoute = route;
+    if(route.startsWith("/#/Media")){
+      console.log("trimming '/#/Media' from path for API call");
+      apiRoute = route.slice(8);      
+    }
+    this.apiCall(apiRoute, function (response) {
       if(response.status === 200){
-        self.setState({
-          crumbs: crumbs.slice(0,i+1)
-        })
-        let listing = response.data.files.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size}));
-        listing.push(response.data.folders.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"})));
-        console.log(listing);
+        self.buildCrumbs(route);            
+        let listing = response.data.folders.map(fmowz => ({label: fmowz.name, path: `${route}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"}));
+        listing = listing.concat(response.data.files.map(fmowz => ({label: fmowz.name, path: `${route}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size})));
         self.setState({
           filesMow: listing,
-          path: path,
+          currentDirectory: route,
         });
-      } else {
-          console.log("A vague error has occured");
       }
     })
   }
 
-  handleClick(path){
-    let self = this;
-    let currentDir = this.state.path + "/" + path;
-
-    this.apiCall(currentDir, function (response) {
-        if(response.status === 200){
-          self.addCrumb(path);
-                
-          let listing = response.data.folders.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"}));
-          listing = listing.concat(response.data.files.map(fmowz => ({label: fmowz.name, path: `${path}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size})));
-          console.log(listing);
-          self.setState({
-            filesMow: listing,
-            path: currentDir,
-          });
-        } else {
-            console.log("A vague error has occured");
-        }
-    })
-  }
-
-  libraryClick(path) {
-    
-    this.setState(
-      { 
-        files: [],
-        path: "",
-        crumbs: [{
-          label: "Media",
-          path: "/#/Media"
-        }]
-      }
-    ,() => this.handleClick(path)
-    );     
-  }
-
-  addCrumb(dir){
-    const crumbs = this.state.crumbs;
-    let npath = crumbs.slice(-1)[0].path + '/' + dir;
+  buildCrumbs(route) {
+    let splitRoute = route.split('/');
+    let crumbs = [];
+    for(let i = 4; i <= splitRoute.length; i++) {
+      crumbs.push({label: splitRoute[i-1], path: splitRoute.slice(0,i).join('/')});
+    }
     this.setState({
-      crumbs: crumbs.concat([{
-        label: dir,
-        path: npath
-      }])
-    });
-}
+      crumbs: crumbs
+    })
+  }
 
   render() {
 
@@ -165,7 +126,7 @@ class Stuff extends Component {
                 path = {library.path}
                 label = {library.label}
                 key = {i}
-                onClick = {() => this.libraryClick(library.label)}
+                onClick = {() => this.masterClick(library.path)}
             />
         );
     });
@@ -180,13 +141,13 @@ class Stuff extends Component {
         <br></br>
         <h3>
           <BreadCrumb 
-            rootdir="media" crumbs={this.state.crumbs} onClick = {(foo,bar) => this.bcClick(foo,bar)}>
+            rootdir="media" crumbs={this.state.crumbs} onClick = {(foo) => this.masterClick(foo)}>
           </BreadCrumb>
         </h3>
 
 
         <FolderView
-          directory = {this.state.path} files = {this.state.filesMow} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.handleClick(foo)}> 
+           files = {this.state.filesMow} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.masterClick(foo)}> 
         </FolderView>
       </div>
     );

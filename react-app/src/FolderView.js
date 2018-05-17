@@ -2,9 +2,7 @@ import React, { Component } from "react";
 
 function File(props) {
     return (
-        <a  href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realurl = {"#/Media"+props.path+"/"+props.label}
-            
+        <a  href= { `${props.path}/${props.label}`.replace(/ /g,'_') }            
             className="list-group-item list-group-item-action d-flex"
             onClick = {props.onClick}>
             <div className="mr-auto"> {props.label}</div>
@@ -17,11 +15,9 @@ function File(props) {
 function Folder(props) {
     return (
         <a 
-        href= { `#/Media${props.path}/${props.label}`.replace(/ /g,'_') }
-        realurl = {"#/Media"+props.path+"/"+props.label}
+        href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
         className ="list-group-item list-group-item-action d-flex flex-row" 
-        onClick = {props.onClick}>
-            
+        onClick = {props.onClick}>            
             <div className="mr-auto"><i className = "material-icons">folder</i> {props.label}</div>
             <div className="px-2">- </div>
             <div className="px-2"> {props.date}</div>
@@ -52,29 +48,29 @@ class FolderView extends Component {
 
         let bcbar = this.state.contents.map((entry,i) => {
             //should change backend to separate files and folders in results
-            if(entry.type == 'dir'){
+            if(entry.type === 'dir'){
                 return (                
                     <Folder
-                        path = {this.state.directory}
+                        path = {entry.path}
                         date = {entry.date}
                         size = {entry.size}
                         time = {entry.time}
                         label = {entry.label}
                         key = {i}
-                        onClick = {() => this.state.onClick(entry.label)}
+                        onClick = {() => this.state.onClick(entry.path)}
                     />             
                 );
             }
             
                 return (
                     <File
-                        path = {this.state.directory}
+                        path = {entry.path}
                         label = {entry.label}
                         date = {entry.date}
                         size = {entry.size}
                         time = {entry.time}
                         key = {i}
-                        onClick = {() => this.state.dler(this.state.directory,entry.label)}
+                        onClick = {() => this.state.dler(entry.path)}
                     />
                 )
 
