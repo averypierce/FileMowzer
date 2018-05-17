@@ -8,8 +8,8 @@ function File(props) {
             className="list-group-item list-group-item-action d-flex"
             onClick = {props.onClick}>
             <div className="mr-auto"> {props.label}</div>
-            <div className="px-2">{props.size}</div>
-            <div className="px-2">{props.date}</div>
+            <div className="px-2">{props.size} </div>
+            <div className="px-2"> {props.date}</div>
         </a>
     );
 }
@@ -23,8 +23,8 @@ function Folder(props) {
         onClick = {props.onClick}>
             
             <div className="mr-auto"><i className = "material-icons">folder</i> {props.label}</div>
-            <div className="px-2">-</div>
-            <div className="px-2">{props.date}</div>
+            <div className="px-2">- </div>
+            <div className="px-2"> {props.date}</div>
         </a>
     );
 }
