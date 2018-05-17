@@ -34,35 +34,26 @@ class Stuff extends Component {
                 };  
    this.getLibraryList();
   }
-  dler(path) {
-    if(path.startsWith("/#/Media")){
-      console.log("trimming '/#/Media' from path for download API call");
-      path = path.slice(8);      
+
+  dler(url) {
+    if(url.startsWith("/#/Media")){
+      console.log("trimming '/#/Media' from url for download API call");
+      url = url.slice(8);      
     }
-    let file = `https://${serverHost}:5000/download` + path;
-    let token = localStorage.getItem('id_token');
-    let config = {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        }
-    }  
-    axios.get(file,config)
-    .then((response) =>  {
-        if(response.status === 200){
-            let link = document.createElement('a');
-            document.body.appendChild(link);
-            link.href = `${file}?jwt=${response.data.access_token}`;
-            link.setAttribute('type', 'hidden');
-            link.click();
-        }
-    })
-    .catch(function (error) {
-    console.log(error);
-    });
+    let downloadApiBaseUrl = `https://${serverHost}:5000/download`;
+
+    this.apiCall(url, function(response) {
+      if(response.status === 200){
+          let link = document.createElement('a');
+          document.body.appendChild(link);
+          link.href = `${downloadApiBaseUrl}${url}?jwt=${response.data.access_token}`;
+          link.setAttribute('type', 'hidden');
+          link.click();
+      }
+    },downloadApiBaseUrl) //change apiBaseUrl
   }    
 
-  apiCall(path,cb){
-    let apiBaseUrl = `https://${serverHost}:5000/api/v1`;
+  apiCall(path,cb, apiBaseUrl = `https://${serverHost}:5000/api/v1`){
     let token = localStorage.getItem('id_token');
     let config = {
       headers: {
