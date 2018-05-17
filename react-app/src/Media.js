@@ -42,12 +42,10 @@ class Stuff extends Component {
     }
     let downloadApiBaseUrl = `https://${serverHost}:5000/download`;
 
-    this.apiCall(url, function(response) {
+    this.apiCall(url,(response) => {
       if(response.status === 200){
           let link = document.createElement('a');
-          document.body.appendChild(link);
           link.href = `${downloadApiBaseUrl}${url}?jwt=${response.data.access_token}`;
-          link.setAttribute('type', 'hidden');
           link.click();
       }
     },downloadApiBaseUrl) //change apiBaseUrl
@@ -68,7 +66,7 @@ class Stuff extends Component {
   }
   getLibraryList() {
     let self = this;
-    this.apiCall('/home',function (response) {
+    this.apiCall('/home', (response) => {
         if(response.status === 200){
           self.setState({
             libraries: response.data.map(library => ({ label: library, path: `/#/Media/${library}`}))
@@ -84,7 +82,7 @@ class Stuff extends Component {
       console.log("trimming '/#/Media' from path for API call");
       apiRoute = route.slice(8);      
     }
-    this.apiCall(apiRoute, function (response) {
+    this.apiCall(apiRoute, (response) => {
       if(response.status === 200){
         self.buildCrumbs(route);            
         let listing = response.data.folders.map(fmowz => ({label: fmowz.name, path: `${route}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"}));

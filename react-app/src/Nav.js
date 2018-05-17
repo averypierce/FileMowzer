@@ -27,12 +27,18 @@ class Nav extends Component {
                         <li className="nav-item">                      
                                 <NavLink to="/Media">
                                     <div className="nav-link" href="#/Media">Media</div>
-                                </NavLink></li>                       
-                        <li className="nav-item">
-                            <NavLink to="/Login">
-                                <div className="nav-link" href="#/Login">Login</div>
-                            </NavLink>
-                        </li>
+                                </NavLink>
+                        </li>                       
+                    </ul>
+                </div>
+                <div className="collapse navbar-collapse" id="navbarText">
+                    <ul className="navbar-nav ml-auto">
+                    <li className="nav-item">                      
+                                <NavLink to="/Login">
+                                    <div className="nav-link" href="#/Login">Login</div>
+                                </NavLink>
+                    </li>  
+                    
                     </ul>
                 </div>
             </nav>

@@ -46,7 +46,7 @@ render() {
       <div>
           
         <MuiThemeProvider>
-          <div>
+          <div class = "d-flex justify-content-center align-self-center">
           <form onSubmit={(event) => this.handleClick(event)} >
            <TextField
              floatingLabelText="Username"
