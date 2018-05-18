@@ -2,25 +2,25 @@ import React, { Component } from "react";
 
 function File(props) {
     return (
-        <a  href= { `${props.path}/${props.label}`.replace(/ /g,'_') }            
-            className="list-group-item list-group-item-action d-flex"
-            onClick = {props.onClick}>
-            <div className="mr-auto"> {props.label}</div>
-            <div className="px-2">{props.size} </div>
-            <div className="px-2"> {props.date}</div>
+        <a 
+            href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
+            className ="list-group-item list-group-item-action d-flex flex-row" 
+            onClick = {props.onClick}>            
+            <div className="mr-auto"><i className = "material-icons">{props.icon}</i> {props.label}</div>
+            <div className="px-2"> {props.size} </div>
+            <div className="px-2"> {props.date} </div>
         </a>
     );
 }
-
-function Folder(props) {
+function Video(props) {
     return (
         <a 
-        href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
-        className ="list-group-item list-group-item-action d-flex flex-row" 
-        onClick = {props.onClick}>            
-            <div className="mr-auto"><i className = "material-icons">folder</i> {props.label}</div>
-            <div className="px-2">- </div>
-            <div className="px-2"> {props.date}</div>
+            href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
+            className ="list-group-item list-group-item-action d-flex flex-row" 
+            onClick = {props.onClick}>            
+            <div className="mr-auto"><div className="mr-auto"><img src="/mkv.png" width="24" height="24" class="d-inline-block align-middle"></img> {props.label}</div></div>
+            <div className="px-2"> {props.size} </div>
+            <div className="px-2"> {props.date} </div>
         </a>
     );
 }
@@ -50,29 +50,43 @@ class FolderView extends Component {
             //should change backend to separate files and folders in results
             if(entry.type === 'dir'){
                 return (                
-                    <Folder
+                    <File
                         path = {entry.path}
                         date = {entry.date}
                         size = {entry.size}
                         time = {entry.time}
                         label = {entry.label}
+                        icon = 'folder'
                         key = {i}
                         onClick = {() => this.state.onClick(entry.path)}
                     />             
                 );
             }
-            
+            if(entry.type === 'mkv' || entry.type === 'avi' || entry.type === 'mp4'){
                 return (
-                    <File
-                        path = {entry.path}
-                        label = {entry.label}
-                        date = {entry.date}
-                        size = {entry.size}
-                        time = {entry.time}
-                        key = {i}
-                        onClick = {() => this.state.dler(entry.path)}
-                    />
-                )
+                <Video
+                    path = {entry.path}
+                    label = {entry.label}
+                    date = {entry.date}
+                    size = {entry.size}
+                    time = {entry.time}
+                    icon = {''}
+                    key = {i}
+                    onClick = {() => this.state.dler(entry.path)}
+                />
+            )}
+            return (                
+                <File
+                    path = {entry.path}
+                    date = {entry.date}
+                    size = {entry.size}
+                    time = {entry.time}
+                    label = {entry.label}
+                    icon = ''
+                    key = {i}
+                    onClick = {() => this.state.onClick(entry.path)}
+                />             
+            );
 
         });
 

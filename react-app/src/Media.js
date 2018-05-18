@@ -23,13 +23,13 @@ class Stuff extends Component {
 
                     currentDirectory: "",
  
-                    filesMow: [{ 
+                    filesMow: [/*{ 
                       label: "",
                       path: "",
                       type: "",
                       date: "",
                       size: ""
-                    }],
+                    }*/],
                     crumbs: []
                 };  
    this.getLibraryList();

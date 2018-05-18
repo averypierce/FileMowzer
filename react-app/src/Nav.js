@@ -19,13 +19,12 @@ function MyWidget(props) {
     if(token != null){
         let decoded = jwt_decode(token);
         return (
-            <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i className = "material-icons">account_box</i> {decoded.identity}
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" >Action</a>
-          <a class="dropdown-item" >Another action</a>
+          <a class="dropdown-item disabled" href="#/Settins">Settings</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#/Login" onClick={() => deleteToken()}>Sign Out</a>
         </div>
@@ -47,7 +46,7 @@ class Nav extends Component {
             <HashRouter>
               <div>            
               <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a className="navbar-brand" href="#/">FileMowzer</a>
+                <a className="navbar-brand" href="#/"><img src="/favicon.ico" width="30" height="30" class="d-inline-block align-top"></img> FileMowzer</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
