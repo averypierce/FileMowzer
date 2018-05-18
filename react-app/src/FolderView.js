@@ -18,7 +18,6 @@ class FolderView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            directory: props.directory,
             contents: props.files,
             onClick: props.onClick,
             dler: props.dler,
@@ -28,7 +27,6 @@ class FolderView extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         return {
             contents: nextProps.files,
-            directory: nextProps.directoryW
         }
     }
 
@@ -37,11 +35,9 @@ class FolderView extends Component {
         let bcbar = this.state.contents.map((entry,i) => {
 
             let icon = null;
-            let onClick = () => this.state.dler(entry.path);
             switch(entry.type) {
                 case 'dir':
                     icon = <i className = "material-icons">folder</i>;
-                    onClick = () => this.state.onClick(entry.path);
                     break;
                 case 'mkv':
                 case 'avi':
@@ -59,7 +55,7 @@ class FolderView extends Component {
                     label = {entry.label}
                     icon = {icon}
                     key = {i}
-                    onClick = {onClick}
+                    onClick = {(foo) => entry.onClick(entry.path)}
                 />             
             );            
         });

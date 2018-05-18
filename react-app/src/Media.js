@@ -16,8 +16,8 @@ class Stuff extends Component {
 
                     libraries: [
                       //{ 
-                      //label: "default",
-                      //path: "",
+                        //label: "default",
+                        //path: "",
                       //}
                     ],
 
@@ -48,7 +48,7 @@ class Stuff extends Component {
           link.href = `${downloadApiBaseUrl}${url}?jwt=${response.data.access_token}`;
           link.click();
       }
-    },downloadApiBaseUrl) //change apiBaseUrl
+    },downloadApiBaseUrl)
   }    
 
   apiCall(path,cb, apiBaseUrl = `https://${serverHost}:5000/api/v1`){
@@ -85,8 +85,22 @@ class Stuff extends Component {
     this.apiCall(apiRoute, (response) => {
       if(response.status === 200){
         self.buildCrumbs(route);            
-        let listing = response.data.folders.map(fmowz => ({label: fmowz.name, path: `${route}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: "-"}));
-        listing = listing.concat(response.data.files.map(fmowz => ({label: fmowz.name, path: `${route}/${fmowz.name}`, type: fmowz.type, date: fmowz.ctime, size: fmowz.size})));
+        let listing = response.data.folders.map(fmowz => ({
+          label: fmowz.name,
+          path: `${route}/${fmowz.name}`,
+          type: fmowz.type,
+          date: fmowz.ctime,
+          size: "-",
+          onClick: (foo) => this.masterClick(foo)
+        }));
+        listing = listing.concat(response.data.files.map(fmowz => ({
+          label: fmowz.name,
+          path: `${route}/${fmowz.name}`,
+          type: fmowz.type,
+          date: fmowz.ctime,
+          size: fmowz.size,
+          onClick: (foo) => this.dler(foo)
+        })));
         self.setState({
           filesMow: listing,
           currentDirectory: route,
@@ -136,7 +150,7 @@ class Stuff extends Component {
 
 
         <FolderView
-           files = {this.state.filesMow} dler ={(foo,bar) => this.dler(foo,bar)} onClick = {(foo) => this.masterClick(foo)}> 
+           files = {this.state.filesMow}> 
         </FolderView>
       </div>
     );
