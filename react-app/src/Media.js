@@ -147,8 +147,6 @@ class Stuff extends Component {
             rootdir="media" crumbs={this.state.crumbs} onClick = {(foo) => this.masterClick(foo)}>
           </BreadCrumb>
         </h3>
-
-
         <FolderView
            files = {this.state.filesMow}> 
         </FolderView>

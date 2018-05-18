@@ -2,14 +2,16 @@ import React, { Component } from "react";
 
 function File(props) {
     return (
-        <a 
-            href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
-            className ="list-group-item list-group-item-action d-flex flex-row" 
-            onClick = {props.onClick}>            
-            <div className="mr-auto">{props.icon} {props.label}</div>
-            <div className="px-2"> {props.size} </div>
-            <div className="px-2"> {props.date} </div>
-        </a>
+        <div class="row">
+            <a 
+                href= { `${props.path}/${props.label}`.replace(/ /g,'_') }
+                className ="list-group-item list-group-item-action d-flex flex-row" 
+                onClick = {props.onClick}>            
+                <div className="mr-auto">{props.icon} {props.label}</div>
+                <div className="px-2"> {props.size} </div>
+                <div className="px-2 d-none d-sm-block"> {props.date} </div>
+            </a>
+        </div>
     );
 }
 
@@ -19,8 +21,6 @@ class FolderView extends Component {
         super(props);
         this.state = {
             contents: props.files,
-            onClick: props.onClick,
-            dler: props.dler,
         };
     }
 
@@ -62,7 +62,7 @@ class FolderView extends Component {
 
         return (
             <div>  
-                <ul className="list-group list-group-flush ">              
+                <ul className="list-group list-group-flush">              
                     {bcbar}
                 </ul>
             </div>
