@@ -118,7 +118,7 @@ class Downloader(Resource):
         user = get_jwt_identity()
         if user:
             #send back a token containing whatever information it is we need
-            downloadToken = create_access_token({'library': library,'path': path,'user': user},expires_delta=timedelta(seconds=3))
+            downloadToken = create_access_token({'library': library,'path': path,'user': user},expires_delta=timedelta(hours=24))
             downloadToken = jsonify(access_token = downloadToken)
             downloadToken.status_code = 200
             return downloadToken
