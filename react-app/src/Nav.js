@@ -21,13 +21,16 @@ function MyWidget(props) {
         return (
         <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i className = "material-icons">account_box</i> {decoded.identity}
+        <i className = "material-icons">account_box</i> {decoded.identity} 
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item disabled" href="#/Settins">Settings</a>
+          <a class="dropdown-item disabled" href="#/Settings">Settings</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#/Login" onClick={() => deleteToken()}>Sign Out</a>
         </div>
+        <div>
+
+            </div>
       </li> 
         )
     }
@@ -63,12 +66,11 @@ class Nav extends Component {
                             </NavLink>
                         </li>                       
                     </ul>
-                </div>
-                <div className="collapse navbar-collapse" id="navbarText">
                     <ul className="navbar-nav ml-auto">
-                                <MyWidget></MyWidget>     
+                        <MyWidget></MyWidget>     
                     </ul>
                 </div>
+
             </nav>
     
                 <div className="content">

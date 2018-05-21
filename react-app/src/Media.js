@@ -135,21 +135,25 @@ class Stuff extends Component {
     });
 
     return (
-      <div>
+      <div className = "row">
+        <div className = "col-sm-1">
+        <br></br>
         <MuiThemeProvider>
-          <div>
+          <div className="col">
             {userLibraries}
           </div>
         </MuiThemeProvider>
-        <br></br>
+        </div>
+        <div className = "col-sm-11">
         <h3>
           <BreadCrumb 
             rootdir="media" crumbs={this.state.crumbs} onClick = {(foo) => this.masterClick(foo)}>
           </BreadCrumb>
-        </h3>
-        <FolderView
-           files = {this.state.filesMow}> 
-        </FolderView>
+          </h3>
+          <FolderView
+            files = {this.state.filesMow}> 
+          </FolderView>
+        </div>
       </div>
     );
   }
